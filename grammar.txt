@@ -1,0 +1,21 @@
+TSTART = "{{"    						-->  to indicate that the start of a template invocation
+TEND = "}}"
+PIPE = "|"
+OUTERTEXT = anything, but TSTART, DSTART
+INNERTEXT = anything, but TSTART, DSTART, PSTART, PIPE, TEND
+DSTART = "{:"         						-->   to indicate the start of a template definition
+DEND = ":}"
+INNERDTEXT = anything, but TSTART, DSTART, PSTART, PIPE, DEND
+PSTART = "{{{" 							-->   to use variables
+PEND = "}}}"
+PNAME = anything, but PIPE, PEND
+
+<outer> ::= (OUTERTEXT |<templateinvocation>|<templatedef>)*
+<templateinvocation> ::= TSTART <itext> <targs> TEND
+<targs> ::= (PIPE <itext>)*
+<itext> ::= (INNERTEXT |<templateinvocation>|<templatedef>|<tparam>)*
+
+<templatedef> ::= DSTART <dtext> (PIPE <dtext>)+ DEND
+<dtext> ::= (INNERDTEXT |<templateinvocation>|<templatedef>|<tparam>)*
+
+<tparam> ::= PSTART PNAME PEND
